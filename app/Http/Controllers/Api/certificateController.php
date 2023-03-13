@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\certificateResource;
 use App\services\certificateQuery;
 
+use function PHPUnit\Framework\isNull;
+
 class certificateController extends Controller
 {
     use apiResponse;
@@ -23,7 +25,12 @@ class certificateController extends Controller
             return $this->apiResponse(certificateResource::collection(certificate::paginate()),'ok',200);
             // return new certificateResource(certificate::paginate());
         }else{
-            return $this->apiResponse(certificateResource::collection(certificate::where($queryItems)->paginate()),'ok',200);
+            $cert=certificateResource::collection(certificate::where($queryItems)->paginate());
+            if(count($cert)==0){
+                return $this->apiResponse($cert,'null',404);
+            }
+      
+            return $this->apiResponse($cert,'ok',200);
         }
     /// based class what i need 
     }
