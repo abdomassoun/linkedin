@@ -8,5 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class openjob extends Model
 {
     use HasFactory;
+    protected $fillable=[
+        'name',
+        'domain',
+    ];
     
 }

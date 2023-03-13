@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;//new commit
-
+use App\Http\Controllers\Api\certificateController;
+use App\Http\Controllers\Api\openJobController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,7 +37,8 @@ Route::group(['prefix'=>'openjob'],function($router){
     
 });
 Route::group(['prefix'=>'certificate'],function($router){
-    Route::get('get/{id}', [certificateController::class, 'index']);
+    Route::get('get', [certificateController::class, 'index']);
+    Route::get('get/{id}', [certificateController::class, 'get']);
     Route::post('create', [certificateController::class, 'create']);
     Route::post('update/{id}', [certificateController::class, 'update']);
     Route::post('destroy/{id}', [certificateController::class, 'destroy']);

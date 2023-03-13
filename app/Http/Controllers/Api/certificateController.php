@@ -8,12 +8,30 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Resources\certificateResource;
+use App\services\certificateQuery;
 
 class certificateController extends Controller
 {
+    use apiResponse;
+
+    public function index(Request $request){
+        $filter=new certificateQuery();
+        $queryItems=$filter->transform($request);//['colemn','operator'.'valye']
+        if(count($queryItems)==0){
+
+            // return $this->apiResponse(certificateResource::collection(certificate::get()),'ok',200);
+            return $this->apiResponse(certificateResource::collection(certificate::paginate()),'ok',200);
+            // return new certificateResource(certificate::paginate());
+        }else{
+            return $this->apiResponse(certificateResource::collection(certificate::where($queryItems)->paginate()),'ok',200);
+        }
+    /// based class what i need 
+    }
+
     public function get($id){
-        if(certificate::find($id)){
-            return $this->apiResponse(new certificate(certificate::find($id)),'ok',200);
+        $certificate=certificate::find($id);
+        if($certificate){
+            return $this->apiResponse(new certificateResource($certificate),'ok',200);
         }else{
             return $this->apiResponse(null,'The certificate Not Found',404);
         }
@@ -22,6 +40,10 @@ class certificateController extends Controller
         $validator = Validator::make($request->all(), [
             // 'title' => 'required|max:255',
             // 'body' => 'required',
+            'name' => 'required',
+            'note' => 'required',
+            'age' => 'required',
+            'user_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -40,6 +62,9 @@ class certificateController extends Controller
         $validator = Validator::make($request->all(), [
             // 'title' => 'required|max:255',
             // 'body' => 'required',
+            'name' => 'required',
+            'note' => 'required',
+            'age' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -60,8 +85,7 @@ class certificateController extends Controller
 
     }
     public function destroy($id){
-        $certificate=certificate::find($id);
-
+        $certificate=certificate::find($id);        
         if(!$certificate){
             return $this->apiResponse(null,'The certificate Not Found',404);
         }
