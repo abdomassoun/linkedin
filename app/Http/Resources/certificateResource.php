@@ -17,7 +17,7 @@ class certificateResource extends JsonResource
         return [
            
             'name'=>$this->name,
-            'age'=>$this->title,
+            'age'=>$this->age,
             'note'=>$this->note,
             'user_id'=>$this->user_id,
             
